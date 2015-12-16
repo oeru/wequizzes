@@ -24,7 +24,7 @@ $(function() {
         rand.push([]);
         $('li.weQoption', $qs[i]).each(function(ix) {
           var nqn = qn + '_' + i;
-          rand[i][ix]='<li class="weQoption"><input type="radio" name="' + nqn + '" id="' + nqn + '_' + ix + '"><label for="' + nqn + '_' + ix + '">' + $(this).html() + '</label></li>';
+          rand[i][ix]='<li class="weQoption"><label><input type="radio" name="' + nqn + '" id="' + nqn + '_' + ix + '">' + $(this).html() + '</label></li>';
         });
       }
       for (i=0; i<$qs.length; ++i) {
@@ -37,7 +37,7 @@ $(function() {
       for (i=0; i<$qs.length; ++i) {
         $('li.weQoption', $qs[i]).each(function(ix) {
           var nqn = qn + '_' + i;
-          $(this).replaceWith('<li class="weQoption"><input type="radio" name="' + nqn + '" id="' + nqn + '_' + ix + '"><label for="' + nqn + '_' + ix + '">' + $(this).html() + '</label></li>');
+          $(this).replaceWith('<li class="weQoption"><label><input type="radio" name="' + nqn + '" id="' + nqn + '_' + ix + '">' + $(this).html() + '</label></li>');
         });
       }
     }
@@ -53,6 +53,7 @@ $(function() {
       + 'ul li.weQoption { list-style-type: none; list-style-image: none;}'
       + 'ul.weQresponse { display: none; }'
       + 'ul li.weQresponse { list-style-type: none; list-style-image: none; }'
+      + '.WEquizMultipleChoice label,.WEquizCloze label {font-weight: normal; }'
       + '</style>');
   }
 
