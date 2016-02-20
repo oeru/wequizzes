@@ -2,7 +2,20 @@
 var $ = jQuery;
 $(function() {
   var i;
-  
+
+  function addQuizStyle() {
+    $('head').append('<style id="WEquizWidgetStyle">'
+      + 'ul.weQquestion { margin-left: 1em;}'
+      + 'ul.weQquestion li { list-style-type: decimal; list-style-image: none; }'
+      + 'ul li.weQoption { list-style-type: none; list-style-image: none;}'
+      + 'ul.weQresponse { display: none; }'
+      + 'ul li.weQresponse { list-style-type: none; list-style-image: none; }'
+      + '.WEQcorrectionWrap { display: inline-block; vertical-align: top; }'
+      + '.WEQcorrection { display: hidden; }'
+      + '.WEquizMultipleChoice label,.WEquizCloze label {font-weight: normal; }'
+      + '</style>');
+  }
+
   function livenQuizzes(n) {
     var i, $q,
         qn = 'mcq' + n,
@@ -47,14 +60,7 @@ $(function() {
   }
 
   if ($('#WEquizWidgetStyle').length === 0) {
-    $('head').append('<style id="WEquizWidgetStyle">'
-      + 'ul.weQquestion { margin-left: 1em;}'
-      + 'ul.weQquestion li { list-style-type: decimal; list-style-image: none; }'
-      + 'ul li.weQoption { list-style-type: none; list-style-image: none;}'
-      + 'ul.weQresponse { display: none; }'
-      + 'ul li.weQresponse { list-style-type: none; list-style-image: none; }'
-      + '.WEquizMultipleChoice label,.WEquizCloze label {font-weight: normal; }'
-      + '</style>');
+    addQuizStyle();
   }
 
   $('.WEquizMultipleChoice').each(livenQuizzes);
@@ -69,15 +75,10 @@ $(function() {
     $(this).addClass('WEquizLive');
 
     if ($('#WEquizWidgetStyle').length === 0) {
-      $('head').append('<style id="WEquizWidgetStyle">'
-        + 'ul.weQquestion { margin-left: 1em;}'
-        + 'ul.weQquestion li { list-style-type: decimal; list-style-image: none; }'
-        + 'ul li.weQoption { list-style-type: none; list-style-image: none;}'
-        + 'ul.weQresponse { display: none; }'
-        + 'ul li.weQresponse { list-style-type: none; list-style-image: none; }'
-        + '</style>');
+      addQuizStyle();
     }
-    
+
+    $(this).find('ul:first').addClass('weQquestion').wrap('<form></form>');
     $(this).find('ul:first').addClass('weQquestion').wrap('<form></form>');
     $us = $(this).find('u').each(function(i) {
         var j,
@@ -85,12 +86,12 @@ $(function() {
             r = '',
             id = qn + '_' + i;
         for (j=0; j<s.length; ++j) {
-          r += '<input type="text" size=10 class="WEquizClozeWord" data-qword="' + s[j].toLowerCase() + '"> ';
+          r += '<div class="WEQcorrectionWrap"><input type="text" size=10 class="WEquizClozeWord" data-qword="' + s[j].replace(/"/g, '') + '"></div> ';
         }
         $(this).replaceWith(r);
       }
     );
-    $('.WEquizClozeWord').on('blur', function() {
+    $(this).find('.WEquizClozeWord').on('blur', function() {
       var all = true,
           caution = $(this).parents('ul').hasClass('WEquizCaution');
       // filled in all the blanks for this question?
@@ -102,16 +103,18 @@ $(function() {
       if (all) {
         $(this).parents('li').find('input').each(function() {
           if (caution && ($.trim($(this).val().toLowerCase()).length < $(this).attr("data-qword").length)) {
-           $(this).css('background', '#FFCC00'); 
+           $(this).css('background', '#FFCC00');
           } else {
-            if ($.trim($(this).val().toLowerCase()) == $(this).attr("data-qword")) {
+            if ($.trim($(this).val().toLowerCase()) === $(this).attr("data-qword").toLowerCase()) {
               $(this).css('background', 'LightGreen');
-              $(this).attr('disabled', true).unbind('blur'); 
+              $(this).attr('disabled', true).unbind('blur');
             } else {
               $(this).css('background', 'LightPink');
+              $(this).after('<br><div class="WEQcorrection">' + $(this).attr('data-qword') + '</div>');
            }
-          } 
+          }
         });
+        $(this).parents('li').find('.WEQcorrection').show('slow');
       }
     });
   }
