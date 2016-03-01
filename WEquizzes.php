@@ -6,7 +6,7 @@
 Plugin Name: WEquizzes
 Plugin URI: http://github.com/oeru/wequizzes
 Description: Add WikiEducator quiz widgets to a course deployed in WordPress.
-Version: 1.0.0
+Version: 1.1.0
 Author: Jim Tittsler
 Author URI: http://WikiEducator.org/User:JimTittsler
 License: GPLv2 or later
